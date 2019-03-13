@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Brings Semantic versioning constraints to Kubernetes resources!
+name: updatey
+version: 0.1

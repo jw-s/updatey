@@ -1,0 +1,24 @@
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ template "updatey.fullname" . }}
+  labels:
+    app: {{ template "updatey.name" . }}
+    chart: {{ template "updatey.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+webhooks:
+  - name: updatey.jw-s.com
+    clientConfig:
+      service:
+        name: {{ template "updatey.name" . }}
+        namespace: {{ .Release.Namespace}}
+        path: "/admit"
+      caBundle: {{ .Values.cert.data.ca }}
+    rules:
+      - operations: [ "CREATE", "UPDATE" ]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods", "deployments", "replicationcontrollers", "replicasets", "daemonsets", "statefulsets", "jobs", "cronjobs"]
+    failurePolicy: {{ .Values.webhook.failurePolicy }}

@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: updatey
+  name: updatey
+  namespace: updatey
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: updatey
+    spec:
+      containers:
+      - name: admisson-controller
+        image: joelws/updatey:0.1
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTPS
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTPS
+        volumeMounts:
+        - name: certs
+          mountPath: /certs
+          readOnly: true
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
+      volumes:
+      - name: certs
+        secret:
+          secretName: tls

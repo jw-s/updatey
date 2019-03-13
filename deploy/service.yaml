@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: updatey
+  namespace: updatey
+spec:
+  selector:
+    app: updatey
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 8080
